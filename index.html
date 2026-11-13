@@ -1,0 +1,741 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Robot Centinela</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    color: white;
+    text-align: center;
+    background: linear-gradient(135deg, #071526, #172b3a, #050b12);
+}
+
+h1 {
+    color: #39ff14;
+    text-shadow: 0 0 15px #39ff14;
+}
+
+h2 {
+    color: #67eaff;
+}
+
+.subtitulo {
+    color: #ddd;
+}
+
+/* PUNTERO VERDE */
+
+#puntero-verde {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 25px;
+    height: 25px;
+    border: 3px solid #39ff14;
+    border-radius: 50%;
+    background: rgba(57,255,20,0.25);
+    box-shadow: 0 0 10px #39ff14, 0 0 25px #39ff14;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 999999;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    body, a, button {
+        cursor: none;
+    }
+}
+
+/* TARJETAS */
+
+.contenedor {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 25px;
+}
+
+.tarjeta {
+    width: 300px;
+    max-width: 100%;
+    padding: 20px;
+    border: 2px solid #39ff14;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.07);
+    box-shadow: 0 0 15px rgba(57,255,20,0.25);
+}
+
+/* ROBOTS */
+
+.robot {
+    width: 150px;
+    margin: 20px auto;
+    position: relative;
+}
+
+.antena {
+    width: 5px;
+    height: 25px;
+    margin: auto;
+    background: #bbb;
+}
+
+.bola-antena {
+    width: 16px;
+    height: 16px;
+    margin: auto;
+    border-radius: 50%;
+    background: #39ff14;
+    box-shadow: 0 0 12px #39ff14;
+}
+
+.cabeza {
+    width: 110px;
+    height: 75px;
+    margin: auto;
+    padding: 15px;
+    border: 4px solid #ddd;
+    border-radius: 20px;
+    background: #777;
+}
+
+.ojos {
+    display: flex;
+    justify-content: space-around;
+}
+
+.ojo {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #39ff14;
+    box-shadow: 0 0 10px #39ff14;
+}
+
+.boca {
+    width: 45px;
+    height: 5px;
+    margin: 12px auto 0;
+    background: #eee;
+    border-radius: 5px;
+}
+
+.brazos {
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    top: 105px;
+    left: -15px;
+    right: -15px;
+}
+
+.brazo {
+    width: 14px;
+    height: 55px;
+    border-radius: 10px;
+    background: #aaa;
+}
+
+.cuerpo {
+    width: 90px;
+    height: 80px;
+    margin: 8px auto;
+    border: 4px solid #ddd;
+    border-radius: 15px;
+    background: #555;
+}
+
+.panel {
+    width: 45px;
+    height: 30px;
+    margin: 20px auto;
+    border-radius: 5px;
+    background: #39ff14;
+    box-shadow: 0 0 10px #39ff14;
+}
+
+.piernas {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.pierna {
+    width: 20px;
+    height: 35px;
+    border-radius: 8px;
+    background: #aaa;
+}
+
+/* ROBOT ISRAEL */
+
+.robot-israel .cabeza {
+    background: #f5f8ff;
+    border-color: #2b67d1;
+}
+
+.robot-israel .cuerpo {
+    background: #174ea6;
+    border-color: #f5f8ff;
+}
+
+.robot-israel .ojo,
+.robot-israel .bola-antena {
+    background: #4aa8ff;
+    box-shadow: 0 0 12px #4aa8ff;
+}
+
+.robot-israel .panel {
+    background: #f5f8ff;
+    box-shadow: 0 0 10px #4aa8ff;
+}
+
+.robot-israel .brazo,
+.robot-israel .pierna {
+    background: #e7edfa;
+}
+
+/* IRON MAN TAQUERO */
+
+.robot-taquero .cabeza {
+    background: #b92727;
+    border-color: #f5c542;
+}
+
+.robot-taquero .cuerpo {
+    background: #a91f24;
+    border-color: #f5c542;
+}
+
+.robot-taquero .ojo,
+.robot-taquero .bola-antena {
+    background: #fff2a6;
+    box-shadow: 0 0 12px #ffd34e;
+}
+
+.robot-taquero .panel {
+    width: 45px;
+    height: 30px;
+    border: 3px solid #ffe28a;
+    border-radius: 50%;
+    background: #65e5ff;
+    box-shadow: 0 0 12px #65e5ff;
+}
+
+.robot-taquero .brazo,
+.robot-taquero .pierna {
+    background: #d99b2b;
+}
+
+/* SENSORES */
+
+.sensor {
+    margin: 15px 0;
+    padding: 10px;
+    border-radius: 10px;
+    background: rgba(0,0,0,0.3);
+}
+
+.estado {
+    min-height: 22px;
+    font-weight: bold;
+    color: #39ff14;
+}
+
+button {
+    padding: 12px 18px;
+    border: none;
+    border-radius: 10px;
+    color: #071526;
+    background: #39ff14;
+    font-weight: bold;
+    font-size: 15px;
+    margin: 8px;
+    box-shadow: 0 0 10px rgba(57,255,20,0.5);
+}
+
+/* FRASE */
+
+.frase {
+    max-width: 750px;
+    margin: 35px auto;
+    padding: 25px;
+    border: 2px solid #67eaff;
+    border-radius: 18px;
+    background: rgba(103,234,255,0.08);
+    box-shadow: 0 0 15px rgba(103,234,255,0.2);
+}
+
+.frase p {
+    color: #67eaff;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 1.6;
+}
+
+/* PODCAST */
+
+.podcast {
+    max-width: 700px;
+    margin: 35px auto;
+    padding: 25px;
+    border: 2px solid #39ff14;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.07);
+    box-shadow: 0 0 15px rgba(57,255,20,0.2);
+}
+
+.podcast audio {
+    width: 100%;
+    margin-top: 15px;
+}
+
+/* ENLACES */
+
+.lista-enlaces {
+    margin: 30px auto;
+    padding: 20px;
+    max-width: 600px;
+    border: 2px solid #67eaff;
+    border-radius: 15px;
+    background: rgba(255,255,255,0.06);
+}
+
+.lista-enlaces a {
+    display: block;
+    margin: 14px;
+    padding: 10px;
+    color: #67eaff;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+    border: 1px solid rgba(103,234,255,0.3);
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+.lista-enlaces a:hover {
+    color: #39ff14;
+    border-color: #39ff14;
+    background: rgba(57,255,20,0.08);
+}
+
+.nota {
+    color: #ccc;
+    font-size: 13px;
+}
+
+/* GALERÍAS */
+
+.galeria,
+.galeria-robots {
+    margin: 35px auto 20px;
+    max-width: 900px;
+    padding: 20px;
+    border: 2px solid #39ff14;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.07);
+    box-shadow: 0 0 15px rgba(57,255,20,0.25);
+}
+
+.imagenes {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.imagenes img {
+    width: 230px;
+    max-width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border: 2px solid #39ff14;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(57,255,20,0.3);
+}
+
+.imagenes p {
+    color: #67eaff;
+    font-weight: bold;
+}
+
+/* PIE DE PÁGINA */
+
+footer {
+    margin-top: 35px;
+    padding: 20px;
+    color: #aaa;
+    border-top: 1px solid #39ff14;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="puntero-verde"></div>
+
+<h1>🤖 Robot Centinela</h1>
+
+<p class="subtitulo">
+Robots con sensores de proximidad
+</p>
+
+<!-- ROBOTS -->
+
+<div class="contenedor">
+
+    <!-- ROBOT ISRAEL -->
+
+    <section class="tarjeta">
+
+        <h2>Robot Israelí</h2>
+
+        <div class="robot robot-israel">
+
+            <div class="bola-antena"></div>
+            <div class="antena"></div>
+
+            <div class="cabeza">
+                <div class="ojos">
+                    <div class="ojo"></div>
+                    <div class="ojo"></div>
+                </div>
+                <div class="boca"></div>
+            </div>
+
+            <div class="brazos">
+                <div class="brazo"></div>
+                <div class="brazo"></div>
+            </div>
+
+            <div class="cuerpo">
+                <div class="panel"></div>
+            </div>
+
+            <div class="piernas">
+                <div class="pierna"></div>
+                <div class="pierna"></div>
+            </div>
+
+        </div>
+
+        <div class="sensor">
+
+            <p>Distancia:
+                <span id="distancia1">--</span> cm
+            </p>
+
+            <p class="estado" id="estado1">
+                Esperando lectura...
+            </p>
+
+        </div>
+
+        <button onclick="simular(1)">
+            Activar sensor
+        </button>
+
+    </section>
+
+    <!-- IRON MAN TAQUERO -->
+
+    <section class="tarjeta">
+
+        <h2>Iron Man Taquero</h2>
+
+        <div class="robot robot-taquero">
+
+            <div class="bola-antena"></div>
+            <div class="antena"></div>
+
+            <div class="cabeza">
+                <div class="ojos">
+                    <div class="ojo"></div>
+                    <div class="ojo"></div>
+                </div>
+                <div class="boca"></div>
+            </div>
+
+            <div class="brazos">
+                <div class="brazo"></div>
+                <div class="brazo"></div>
+            </div>
+
+            <div class="cuerpo">
+                <div class="panel"></div>
+            </div>
+
+            <div class="piernas">
+                <div class="pierna"></div>
+                <div class="pierna"></div>
+            </div>
+
+        </div>
+
+        <div class="sensor">
+
+            <p>Distancia:
+                <span id="distancia2">--</span> cm
+            </p>
+
+            <p class="estado" id="estado2">
+                Esperando lectura...
+            </p>
+
+        </div>
+
+        <button onclick="simular(2)">
+            Activar sensor
+        </button>
+
+    </section>
+
+</div>
+
+<!-- FRASE DEL PROYECTO -->
+
+<section class="frase">
+
+    <h2>⚡ Nuestra misión</h2>
+
+    <p>
+    "La tecnología del futuro comienza con una idea,
+    y cada robot es un paso hacia un mundo más inteligente."
+    </p>
+
+</section>
+
+<!-- PODCAST -->
+
+<section class="podcast">
+
+    <h2>🎙️ Nuestro Podcast</h2>
+
+    <p class="subtitulo">
+    Conoce más sobre nuestro proyecto Robot Centinela.
+    </p>
+
+    <audio controls>
+        <source src="podcast.mp3" type="audio/mpeg">
+        Tu navegador no puede reproducir este audio.
+    </audio>
+
+    <p class="nota">
+    Escucha nuestro podcast sobre los robots y sus sensores.
+    </p>
+
+</section>
+
+<!-- ENLACES FAVORITOS -->
+
+<div class="lista-enlaces">
+
+    <h2>🌐 Mis enlaces favoritos</h2>
+
+    <a href="https://youtu.be/eJUdJoySLII?si=IRKNjvyPpc5GC2ji"
+       target="_blank" rel="noopener noreferrer">
+       🦸 Trailer Avengers: Doomsday
+    </a>
+
+    <a href="https://youtu.be/7AFRaZdVETk?si=IrzxYeIU6ajuhKwW"
+       target="_blank" rel="noopener noreferrer">
+       🎵 Aoi, Koi, Daidaiiro No Hi
+    </a>
+
+    <a href="https://touhou-project.news/shanghai-alice-reprise/en/"
+       target="_blank" rel="noopener noreferrer">
+       🎮 Touhou Project 6 Remake
+    </a>
+
+    <a href="https://youtu.be/-_7AAffsMRM?si=IHPCy8T182zpS0WY"
+       target="_blank" rel="noopener noreferrer">
+       🎧 bleood - alucard
+    </a>
+
+    <a href="https://playvalorant.com/es-mx/"
+       target="_blank" rel="noopener noreferrer">
+       🎯 Videojuego Valorant
+    </a>
+
+    <a href="https://youtu.be/CTR4gBMmqC8?si=ZrUOIMxw3rxPNNH1"
+       target="_blank" rel="noopener noreferrer">
+       🎬 Tráiler Kamikaze Girls
+    </a>
+
+    <a href="https://youtu.be/qLvdBugoyvk?si=dR9g_ioEgYOlMom7"
+       target="_blank" rel="noopener noreferrer">
+       📺 Video libre
+    </a>
+
+    <a href="http://0.0.0.0:8080/Aguacate.php"
+       target="_blank" rel="noopener noreferrer">
+       🥑 Aguacate
+    </a>
+
+</div>
+
+<!-- GALERÍA DE ROBOTS -->
+
+<section class="galeria-robots">
+
+    <h2>🤖 Galería de robot</h2>
+
+    <p class="subtitulo">
+    DRON VOLADOR
+    </p>
+
+    <div class="imagenes">
+
+        <div>
+            <img src="WhatsApp Image 2026-11-12 at 7.35.33 PM (1).jpeg" alt="Mi primer robot">
+        </div>
+
+        <div>
+            <img src="WhatsApp Image 2026-11-12 at 7.35.33 PM.jpeg" alt="Mi segundo robot">
+            <p>DRON</p>
+        </div>
+
+        <div>
+            <img src="WhatsApp Image 2026-11-12 at 7.36.49 PM.jpeg" alt="Robot centinela">
+        
+        </div>
+
+    </div>
+
+</section>
+
+<!-- GALERÍA ORIGINAL -->
+
+<section class="galeria">
+
+    <h2>📸 Galería de imágenes</h2>
+
+    <div class="imagenes">
+
+        <div>
+            <img src="israel.jpg" alt="Primera imagen del robot">
+            <p>Robot 1</p>
+        </div>
+
+        <div>
+            <img src="tacos.jpg" alt="Segunda imagen del robot">
+            <p>Robot 2</p>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- PIE DE PÁGINA -->
+
+<footer>
+
+    <p>
+    🤖 Proyecto escolar: Robot Centinela
+    </p>
+
+    <p>
+    "No son solamente máquinas, son creaciones que representan
+    nuestra imaginación, creatividad e innovación."
+    </p>
+
+</footer>
+
+<script>
+
+/* SIMULACIÓN DE SENSORES */
+
+function simular(numero) {
+
+    const distancia = Math.floor(Math.random() * 100) + 1;
+
+    document.getElementById("distancia" + numero).textContent = distancia;
+
+    const estado = document.getElementById("estado" + numero);
+
+    if (distancia <= 20) {
+
+        estado.textContent = "⚠️ ¡Objeto muy cerca!";
+        estado.style.color = "#ff4444";
+
+    } else if (distancia <= 50) {
+
+        estado.textContent = "🟡 Objeto aproximándose";
+        estado.style.color = "#ffcc33";
+
+    } else {
+
+        estado.textContent = "✅ Zona segura";
+
+        estado.style.color =
+            numero === 1 ? "#4aa8ff" : "#ffd34e";
+
+    }
+
+}
+
+/* PUNTERO VERDE */
+
+const puntero = document.getElementById("puntero-verde");
+
+function moverPuntero(x, y) {
+
+    puntero.style.left = x + "px";
+    puntero.style.top = y + "px";
+
+}
+
+document.addEventListener("pointermove", function(evento) {
+
+    moverPuntero(evento.clientX, evento.clientY);
+
+});
+
+document.addEventListener("pointerdown", function(evento) {
+
+    moverPuntero(evento.clientX, evento.clientY);
+
+});
+
+document.addEventListener("touchmove", function(evento) {
+
+    if (evento.touches.length > 0) {
+
+        moverPuntero(
+            evento.touches[0].clientX,
+            evento.touches[0].clientY
+        );
+
+    }
+
+}, { passive: true });
+
+document.addEventListener("touchstart", function(evento) {
+
+    if (evento.touches.length > 0) {
+
+        moverPuntero(
+            evento.touches[0].clientX,
+            evento.touches[0].clientY
+        );
+
+    }
+
+}, { passive: true });
+
+</script>
+
+</body>
+</html>
